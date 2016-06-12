@@ -1,1 +1,7 @@
+# python virtual env
 venv
+
+# site deps
+content/.gitignore
+content/bower.json
+content/package.json
