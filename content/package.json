@@ -1,0 +1,40 @@
+{
+  "name": "boilerplate",
+  "version": "1.0.0",
+  "description": "My standard web project boilerplate",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "autoprefixer": "^6.3.6",
+    "bower": "^1.7.9",
+    "grunt": "^1.0.1",
+    "cssnano": "^3.6.2",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-less": "^1.3.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-postcss": "^0.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flowdeeps/boilerplate.git"
+  },
+  "keywords": [
+    "HTML",
+    "LESS",
+    "Grunt",
+    "watch",
+    "CSS",
+    "async",
+    "boilerplate",
+    "bootstrap"
+  ],
+  "author": "Pete Haughie pete@republicofpete.net",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Flowdeeps/boilerplate/issues"
+  },
+  "homepage": "https://github.com/Flowdeeps/boilerplate#readme"
+}

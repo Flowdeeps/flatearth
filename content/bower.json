@@ -1,0 +1,32 @@
+{
+  "name": "boilerplate",
+  "description": "My standard web project boilerplate",
+  "main": "index.html",
+  "authors": [
+    "Pete Haughie pete@republicofpete.net"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "HTML",
+    "LESS",
+    "Grunt",
+    "watch",
+    "CSS",
+    "async",
+    "boilerplate",
+    "bootstrap"
+  ],
+  "homepage": "https://github.com/Flowdeeps/boilerplate",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "cssrefresh": "http://cssrefresh.frebsite.nl/js/cssrefresh.js",
+    "blankslate": "https://github.com/Flowdeeps/blankslate.git"
+  }
+}
