@@ -1,3 +1,3 @@
-#! env /usr/bin/python
+#!/usr/bin/env python
 
-print "Hello World"
+import Pygments
