@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 import os
+import configparser
+
 import markdown
 
-import configparser
 
 config = configparser.ConfigParser()
 config.sections()
@@ -30,12 +31,12 @@ css_file = assets + css_folder + config['CSS']['cssfile']
 # js file
 js_file = assets + js_folder + config['JS']['jsfile']
 
-md = markdown.Markdown( output_format = "html5" )
-
 items = os.listdir( input_folder )
 for item in items:
     if item.lower().endswith( '.md' ):
         input_md = item
+
+md = markdown.Markdown( output_format = "html5" )
 
 input_md = input_folder + input_md
 input_md = open( input_md, 'r' ).read()
@@ -44,6 +45,9 @@ input_md = md.convert( input_md )
 body = input_md + '\n' # I like to have a new line at the end of all my html documents
 
 head = open( tpl_head_file, 'r' ).read()
+head = head.replace("$css", css_file)
+head = head.replace("$js", js_file)
+
 aside = open( tpl_aside_file, 'r' ).read()
 foot = open( tpl_foot_file, 'r' ).read()
 
