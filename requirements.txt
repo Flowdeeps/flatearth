@@ -1,5 +1,8 @@
 beautifulsoup4==4.4.1
 bs4==0.0.1
 configparser==3.5.0
+html5lib==0.9999999
 Markdown==2.6.6
+Pillow==3.2.0
+six==1.10.0
 yolk==0.4.3
