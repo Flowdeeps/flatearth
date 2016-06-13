@@ -19,17 +19,17 @@ output_string = "<!-- " + output_string + " -->"
 assets = config['SITE']['assets']
 # asset folders
 tpl_folder = input_folder + assets + config['TPL']['tplfolder']
-css_folder = input_folder + assets + config['CSS']['cssfolder']
-js_folder = input_folder + assets + config['JS']['jsfolder']
+css_folder = assets + config['CSS']['cssfolder']
+js_folder = assets + config['JS']['jsfolder']
 # asset files
 # tpl files
 tpl_head_file = tpl_folder + config['TPL']['header']
 tpl_aside_file = tpl_folder + config['TPL']['aside']
 tpl_foot_file = tpl_folder + config['TPL']['footer']
 # css file
-css_file = assets + css_folder + config['CSS']['cssfile']
+css_file = css_folder + config['CSS']['cssfile']
 # js file
-js_file = assets + js_folder + config['JS']['jsfile']
+js_file = js_folder + config['JS']['jsfile']
 
 items = os.listdir( input_folder )
 for item in items:
