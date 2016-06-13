@@ -9,7 +9,7 @@ I spend a lot of my time in the command line so producing content via a reposito
 ## TODO
 * Get git file history and write into opened aside file
 * Iterate through all folders in documents for markdown files
-* Work out what to do with images. Currently I'm looking at imagemagick or gd-image to convert them to three sizes for a <picture> element
+* Work out what to do with images. Currently I'm looking at ~~imagemagick or gd-image~~ Pillow to convert them to three sizes for a <picture> element
 * Add githook for pulling changes to a server and running app
 
 ## License
