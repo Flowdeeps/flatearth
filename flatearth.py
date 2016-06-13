@@ -59,20 +59,22 @@ foot = open( tpl_foot_file, 'r' ).read()
 
 new_css_folder = output_folder + css_folder
 
-if not os.path.exists( new_css_folder ):
-    os.makedirs( new_css_folder )
-
 css_items = os.listdir( input_folder + css_folder )
+i = 0
 for css_item in css_items:
     if css_item.lower().endswith( '.css' ):
-        shutil.copy2( input_folder + css_folder + css_item, new_css_folder )
+        i = i + 1
+        if i > 0:
+            if not os.path.exists( new_css_folder ):
+                os.makedirs( new_css_folder )
+            shutil.copy2( input_folder + css_folder + css_item, new_css_folder )
 
 output_file = open( output_filename, 'w' )
 output_file.write( head )
 output_file.write( '\n' )
 output_file.write( output_string )
 output_file.write( '\n' )
-output_file.write( body )
+output_file.write( "<body>" + body + "</body>" )
 output_file.write( '\n' )
 output_file.write( aside )
 output_file.write( '\n' )
