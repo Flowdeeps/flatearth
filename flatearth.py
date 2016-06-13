@@ -44,7 +44,7 @@ md = markdown.Markdown( output_format = "html5" )
 input_md = input_folder + input_md
 input_md = open( input_md, 'r' ).read()
 input_md = md.convert( input_md )
-soup = BeautifulSoup( input_md, "html.parser" )
+soup = BeautifulSoup( input_md, 'html5lib' )
 for html_elem in soup.find_all( 'h1' ):
     title_entity = html_elem.text
 for img_elem in soup.find_all( 'img' ):
@@ -54,9 +54,9 @@ for img_elem in soup.find_all( 'img' ):
 body = input_md + '\n' # I like to have a new line at the end of all my html documents
 
 head = open( tpl_head_file, 'r' ).read()
-head = head.replace("$title", title_entity)
-head = head.replace("$css", css_file)
-head = head.replace("$js", js_file)
+head = head.replace( "$title", title_entity )
+head = head.replace( "$css", css_file )
+head = head.replace( "$js", js_file )
 
 aside = open( tpl_aside_file, 'r' ).read()
 foot = open( tpl_foot_file, 'r' ).read()
@@ -67,7 +67,7 @@ css_items = os.listdir( input_folder + css_folder )
 
 i = 0
 for css_item in css_items:
-    if css_item.lower().endswith( '.css' ):
+    if css_item.lower().endswith( ".css" ):
         i = i + 1
         if i > 0:
             if not os.path.exists( new_css_folder ):
@@ -79,8 +79,8 @@ new_img_folder = output_folder + img_folder
 img_items = os.listdir( input_folder + img_folder )
 
 i = 0
+file_exts = [ ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".gif"]
 for img_item in img_items:
-    file_exts = ['.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.gif']
     for file_ext in file_exts:
         # print( file_ext )
         if img_item.lower().endswith( file_ext ):
@@ -88,7 +88,10 @@ for img_item in img_items:
             if i > 0:
                 if not os.path.exists( new_img_folder ):
                     os.makedirs( new_img_folder )
-                shutil.copy2( input_folder + img_folder + img_item, new_img_folder )
+                if file_ext == ".gif":
+                    print( img_item ) # this is where we're going to check if it's an animated gif or not
+                else:
+                    shutil.copy2( input_folder + img_folder + img_item, new_img_folder )
 
 output_file = open( output_filename, 'w' )
 output_file.write( head )
