@@ -13,7 +13,8 @@ config.sections()
 input_folder = config['APP']['inputfolder']
 output_folder = config['APP']['outputfolder']
 output_filename = output_folder + config['APP']['outputfile']
-
+output_string = config['APP']['outputstring']
+output_string = "<!-- " + output_string + " -->"
 assets = config['SITE']['assets']
 # asset folders
 tpl_folder = input_folder + assets + config['TPL']['tplfolder']
@@ -40,7 +41,7 @@ input_md = input_folder + input_md
 input_md = open( input_md, 'r' ).read()
 input_md = md.convert( input_md )
 
-body = input_md
+body = input_md + '\n' # I like to have a new line at the end of all my html documents
 
 head = open( tpl_head_file, 'r' ).read()
 aside = open( tpl_aside_file, 'r' ).read()
@@ -48,7 +49,12 @@ foot = open( tpl_foot_file, 'r' ).read()
 
 output_file = open( output_filename, 'w' )
 output_file.write( head )
+output_file.write( '\n' )
+output_file.write( output_string )
+output_file.write( '\n' )
 output_file.write( body )
+output_file.write( '\n' )
 output_file.write( aside )
+output_file.write( '\n' )
 output_file.write( foot )
 output_file.close()
