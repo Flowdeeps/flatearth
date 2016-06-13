@@ -5,33 +5,48 @@ import markdown
 
 import configparser
 
-config = ConfigParser()
+config = configparser.ConfigParser()
+config.sections()
 config.read( 'general.ini' )
+config.sections()
 
-assets_f = config.get['site']['assets']
-print( config.get['site']['assets'] )
+input_folder = config['APP']['inputfolder']
+output_folder = config['APP']['outputfolder']
+output_filename = output_folder + config['APP']['outputfile']
 
-input_dir = 'content'
-output_dir = 'output'
+assets = config['SITE']['assets']
+# asset folders
+tpl_folder = input_folder + assets + config['TPL']['tplfolder']
+css_folder = input_folder + assets + config['CSS']['cssfolder']
+js_folder = input_folder + assets + config['JS']['jsfolder']
+# asset files
+# tpl files
+tpl_head_file = tpl_folder + config['TPL']['header']
+tpl_aside_file = tpl_folder + config['TPL']['aside']
+tpl_foot_file = tpl_folder + config['TPL']['footer']
+# css file
+css_file = assets + css_folder + config['CSS']['cssfile']
+# js file
+js_file = assets + js_folder + config['JS']['jsfile']
 
 md = markdown.Markdown( output_format = "html5" )
 
-items = os.listdir( input_dir )
+items = os.listdir( input_folder )
 for item in items:
     if item.lower().endswith( '.md' ):
         input_md = item
 
-input_md = input_dir + "/" + input_md
+input_md = input_folder + input_md
 input_md = open( input_md, 'r' ).read()
 input_md = md.convert( input_md )
 
 body = input_md
 
-head = open( 'content/assets/tpl/header.html', 'r' ).read()
-aside = open( 'content/assets/tpl/aside.html', 'r' ).read()
-foot = open( 'content/assets/tpl/footer.html', 'r' ).read()
+head = open( tpl_head_file, 'r' ).read()
+aside = open( tpl_aside_file, 'r' ).read()
+foot = open( tpl_foot_file, 'r' ).read()
 
-output_file = open( output_dir + '/index.html', 'w' )
+output_file = open( output_filename, 'w' )
 output_file.write( head )
 output_file.write( body )
 output_file.write( aside )
