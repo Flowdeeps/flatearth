@@ -1,3 +1,5 @@
+beautifulsoup4==4.4.1
+bs4==0.0.1
 configparser==3.5.0
 Markdown==2.6.6
 yolk==0.4.3

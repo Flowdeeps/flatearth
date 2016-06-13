@@ -4,7 +4,7 @@ import os
 import configparser
 
 import markdown
-
+from bs4 import BeautifulSoup
 
 config = configparser.ConfigParser()
 config.sections()
@@ -41,10 +41,14 @@ md = markdown.Markdown( output_format = "html5" )
 input_md = input_folder + input_md
 input_md = open( input_md, 'r' ).read()
 input_md = md.convert( input_md )
+soup = BeautifulSoup( input_md, "html.parser" )
+for item in soup.find_all( 'h1' ):
+    title_entity = item.text
 
 body = input_md + '\n' # I like to have a new line at the end of all my html documents
 
 head = open( tpl_head_file, 'r' ).read()
+head = head.replace("$title", title_entity)
 head = head.replace("$css", css_file)
 head = head.replace("$js", js_file)
 
