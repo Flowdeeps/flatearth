@@ -1,1 +1,3 @@
+configparser==3.5.0
 Markdown==2.6.6
+yolk==0.4.3

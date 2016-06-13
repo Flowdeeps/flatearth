@@ -3,6 +3,14 @@
 import os
 import markdown
 
+import configparser
+
+config = ConfigParser()
+config.read( 'general.ini' )
+
+assets_f = config.get['site']['assets']
+print( config.get['site']['assets'] )
+
 input_dir = 'content'
 output_dir = 'output'
 
