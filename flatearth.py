@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 import os
 import configparser
 
 import markdown
 from bs4 import BeautifulSoup
+
+from PIL import Image
 
 import shutil
 
@@ -33,6 +37,10 @@ tpl_foot_file = tpl_folder + config['TPL']['footer']
 css_file = css_folder + config['CSS']['cssfile']
 # js file
 js_file = js_folder + config['JS']['jsfile']
+# img sizes
+img_max = config['IMG']['imgmax']
+img_mid = config['IMG']['imgmid']
+img_min = config['IMG']['imgmin']
 
 md_items = os.listdir( input_folder )
 for md_item in md_items:
@@ -49,7 +57,6 @@ for html_elem in soup.find_all( 'h1' ):
     title_entity = html_elem.text
 for img_elem in soup.find_all( 'img' ):
     picture_entity = img_elem
-    # print(picture_entity)
 
 body = input_md + '\n' # I like to have a new line at the end of all my html documents
 
@@ -88,9 +95,41 @@ for img_item in img_items:
             if i > 0:
                 if not os.path.exists( new_img_folder ):
                     os.makedirs( new_img_folder )
-                if file_ext == ".gif":
-                    print( img_item ) # this is where we're going to check if it's an animated gif or not
+                if file_ext == ".gif": # this is where we're going to check if it's an animated gif or not
+                    # Image is a gif so has to be checked
+                    img = Image.open( input_folder + img_folder + img_item )
+                    img_copy = img.copy()
+                    if img.is_animated:
+                        # Image is an animated gif, move it without editing
+                        shutil.copy2( input_folder + img_folder + img_item, new_img_folder ) # just copy it without editing
+                    else: # image is not animated and can be resized
+                        # Image is not an animated gif, edit it and move on
+                        n = 0
+                        while n < 3:
+                            if n == 0:
+                                if not img_copy.size[ 0 ] < int( img_max ):
+                                    img_copy.size = int( img_max ), int( img_max )
+                                    tmp_name = new_img_folder + "max_" + img_item
+                                    img_copy.save( tmp_name )
+                                else:
+                                    shutil.copy2( input_folder + img_folder + img_item, new_img_folder )
+                            if n == 1:
+                                if not img_copy.size[ 0 ] < int( img_mid ):
+                                    img_copy.size = int( img_mid ), int( img_mid )
+                                    tmp_name = new_img_folder + "mid_" + img_item
+                                    img_copy.save( tmp_name )
+                                else:
+                                    shutil.copy2( input_folder + img_folder + img_item, new_img_folder )
+                            if n == 2:
+                                if not img_copy.size[ 0 ] < int( img_min ):
+                                    img_copy.size = int(img_min), int(img_min)
+                                    tmp_name = new_img_folder + "min_" + img_item
+                                    img_copy.save( tmp_name )
+                                else:
+                                    shutil.copy2( input_folder + img_folder + img_item, new_img_folder )
+                            n = n + 1
                 else:
+                    # Image is not a gif so can be dicked with
                     shutil.copy2( input_folder + img_folder + img_item, new_img_folder )
 
 output_file = open( output_filename, 'w' )
