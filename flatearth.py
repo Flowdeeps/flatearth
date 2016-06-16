@@ -8,6 +8,8 @@ import configparser
 import markdown
 from bs4 import BeautifulSoup
 
+from githistory import githistory
+
 from PIL import Image
 
 import shutil
@@ -55,8 +57,6 @@ for md_item in md_items:
 
 md = markdown.Markdown( output_format = "html5" )
 
-import re
-
 input_md = document_folder + input_md
 input_md = open( input_md, 'r' ).read()
 input_md = md.convert( input_md )
@@ -100,6 +100,8 @@ head = head.replace( "$js", js_file )
 
 aside = open( tpl_aside_file, 'r' ).read()
 foot = open( tpl_foot_file, 'r' ).read()
+
+# githistory( "documents/index.md" ) # this is where we get our document history from
 
 # check for css
 new_css_folder = output_folder + css_folder
