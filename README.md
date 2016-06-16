@@ -11,7 +11,7 @@ I spend a lot of my time in the command line so producing content via a reposito
 * Iterate through all folders in documents for markdown files
 * Navigation? I didn't even consider that when I started
 * Get links for images to process from md, not to go through the documents folder for them - this will save on cycles and we can also then iterate through the output html for each element at the same time, only writing in the necessary picture sources
-* Work out what to do with images. Currently I'm looking at ~~imagemagick or gd-image~~ Pillow ~~to convert them to three sizes for a <picture> element (note: this is done now) ~~
+* Work out what to do with images. Currently I'm looking at ~~imagemagick or gd-image~~ Pillow to convert them to three sizes for a <picture> element (note: this is done now but needs to be abstracted to make it more useful and efficient)
 * Add support for galleries and figures/figcaptions etc - my current thoughts are that it will be any images immediately following a ### gallery (Which I think is h3)
 * Add support for video and audio - this is not going to be easy but I guess I can do a check for file extension after a !(alt)[url]
 * Add githook for pulling changes to a server and running app - I need to research this more
