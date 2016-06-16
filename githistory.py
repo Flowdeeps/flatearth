@@ -3,7 +3,7 @@
 import subprocess
 from subprocess import Popen, PIPE
 
-git_data = []
+git_data = None
 
 def githead ():
     cmd = "git rev-parse HEAD"
@@ -12,7 +12,7 @@ def githead ():
     current_revision = term.communicate()[ 0 ]
     current_revision = current_revision.replace( "\n", "" )
 
-    git_data.append( current_revision )
+    git_data = current_revision
 
     return git_data
 
