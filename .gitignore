@@ -5,3 +5,6 @@ venv
 content/.gitignore
 content/bower.json
 content/package.json
+
+# files we need locally but don't want online
+*.pyc
