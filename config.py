@@ -2,7 +2,7 @@
 
 import configparser
 
-def config ( input ):
+def getconfig ( input ):
 
     config = configparser.ConfigParser()
     config.sections()
