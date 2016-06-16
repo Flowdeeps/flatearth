@@ -14,7 +14,7 @@ def load_data( name, line, num ):
 
 def githistory( file ):
 
-    cmd = "git log --follow documents/index.md"
+    cmd = "git log --follow " + file
 
     term = subprocess.Popen( cmd, shell=True, stdout=PIPE, universal_newlines=True )
     output = term.communicate()[ 0 ].split( "\n" )
@@ -31,5 +31,5 @@ def githistory( file ):
             load_data( "Date:", line, j )
             load_data( "   ", line, j )
             i = i + 1
-    print( history_list )
+
     return history_list
