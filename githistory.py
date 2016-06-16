@@ -32,4 +32,14 @@ def githistory( file ):
             load_data( "   ", line, j )
             i = i + 1
 
+    cmd = "git rev-parse HEAD"
+
+    term = subprocess.Popen( cmd, shell=True, stdout=PIPE, universal_newlines=True )
+    current_revision = term.communicate()[ 0 ]
+    current_revision = current_revision.replace( "\n", "" )
+
+    curr_rev_tmp = []
+    curr_rev_tmp.append( current_revision )
+    history_list.append( curr_rev_tmp )
+
     return history_list
