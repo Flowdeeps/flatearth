@@ -3,9 +3,22 @@
 import subprocess
 from subprocess import Popen, PIPE
 
+git_data = []
+
+def githead ():
+    cmd = "git rev-parse HEAD"
+
+    term = subprocess.Popen( cmd, shell=True, stdout=PIPE, universal_newlines=True )
+    current_revision = term.communicate()[ 0 ]
+    current_revision = current_revision.replace( "\n", "" )
+
+    git_data.append( current_revision )
+
+    return git_data
+
 history_list = []
 
-def load_data( name, line, num ):
+def load_data ( name, line, num ):
     if line.startswith( name ):
         tmp_name = line
         tmp_name = tmp_name.replace( name, "" )
@@ -31,15 +44,5 @@ def githistory( file ):
             load_data( "Date:", line, j )
             load_data( "   ", line, j )
             i = i + 1
-
-    cmd = "git rev-parse HEAD"
-
-    term = subprocess.Popen( cmd, shell=True, stdout=PIPE, universal_newlines=True )
-    current_revision = term.communicate()[ 0 ]
-    current_revision = current_revision.replace( "\n", "" )
-
-    curr_rev_tmp = []
-    curr_rev_tmp.append( current_revision )
-    history_list.append( curr_rev_tmp )
 
     return history_list
