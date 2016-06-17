@@ -43,19 +43,40 @@ for gallery in soup.find_all( 'h3' ):
         i = 0
         for gallery_elem in gallery_header_next_sibling:
             if ( gallery_elem.name.lower() == 'img' ):
+
                 if ( i == 0 ):
                     new_gallery = soup.new_tag( "div" )
                     new_gallery[ "class" ] = "gallery"
-                gallery_elem.extract()
-                new_gallery.insert( 1, gallery_elem )
+
+                new_gallery_elem = soup.new_tag( "figure" )
+
+                if ( gallery_elem.has_attr( "alt" ) ):
+                    new_gallery_cap = soup.new_tag( "figcaption" )
+                    new_gallery_cap.string = gallery_elem[ "alt" ] # becaue the alt tag should be descriptive of the image we're going to use it as the tag
+                    new_gallery_elem.insert( 2, new_gallery_cap )
+
+                if ( gallery_elem.has_attr( "title" ) ):
+                    new_gallery_attribution = soup.new_tag( "dl" )
+                    new_gallery_attribution_dt = soup.new_tag( "dt" )
+                    new_gallery_attribution_dt.string = "Image owner:"
+                    new_gallery_attribution_dd = soup.new_tag( "dd" )
+                    new_gallery_attribution_dd.string = gallery_elem[ "title" ]
+                    new_gallery_attribution.insert( 0, new_gallery_attribution_dt )
+                    new_gallery_attribution.insert( 1, new_gallery_attribution_dd )
+                    new_gallery_elem.insert( 1, new_gallery_attribution )
+
+                new_gallery_elem.insert( 0, gallery_elem )
+                new_gallery.insert( 1, new_gallery_elem )
                 i = i + 1
-        gallery_header_next_sibling.replaceWith( new_gallery )
+
+        new_gallery_header.insert_after( new_gallery )
         gallery_header_next_sibling.decompose()
 
 body = str( soup ) + '\n' # I like to have a new line at the end of all my html documents
 # since we have changed to the html5lib it 'helpfully' adds the the html and head elements to the soup which we can get rid of with a string replace
 body = body.replace( "<html><head></head><body>", "" )
 body = body.replace( "</body></html>", "" )
+body = body.replace( "&amp;", "&" ) # thanks bs4 for your escaping of my html-safe characters
 # end of string manipulations
 head = open( config[ "tpl_head" ], 'r' ).read()
 head = head.replace( "$title", title_entity )
