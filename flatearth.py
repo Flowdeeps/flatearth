@@ -68,8 +68,10 @@ for gallery in soup.find_all( 'h3' ):
                 new_gallery_elem.insert( 0, gallery_elem )
                 new_gallery.insert( 1, new_gallery_elem )
                 i = i + 1
-
-        new_gallery_header.insert_after( new_gallery )
+        try:
+            new_gallery_header.insert_after( new_gallery )
+        except:
+            gallery_header.insert_after( new_gallery )
         gallery_header_next_sibling.decompose()
 
 body = str( soup ) + '\n' # I like to have a new line at the end of all my html documents
