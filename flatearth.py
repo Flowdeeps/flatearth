@@ -11,6 +11,7 @@ from config import getconfig # this is from config.py - feed it the ini_file str
 ini_file = "general.ini"
 
 config = getconfig( ini_file )
+backup_config = config # this is so we can reload the config file and still have access to the original values if they're absent from the other ini files
 
 md_items = os.listdir( config[ "document_folder" ] )
 for md_item in md_items:
@@ -23,38 +24,39 @@ input_md = config[ "document_folder" ] + input_md
 loc_input_md = input_md
 input_md = open( input_md, 'r' ).read()
 input_md = md.convert( input_md )
-soup = BeautifulSoup( input_md, 'html.parser' )
+sanitise_md = str( input_md ).replace( ">\n", ">" ) # this is so we can just ignore the extra sibling nodes happen after closing tags
+soup = BeautifulSoup( sanitise_md, 'html5lib' )
 
 for html_elem in soup.find_all( 'h1' ):
     title_entity = html_elem.text
-for img_elem in soup.find_all( 'img' ):
-    picture_entity = img_elem
-    picture_parent = picture_entity.parent
-    picture_src = picture_entity[ 'src' ] # ensure that all images are local, we don't want to get into hotlinking
-    picture_alt = picture_entity[ 'alt' ]
-    # this is where we'll run the image conversion function against the url we have
-    new_picture_entity_parent = soup.new_tag( 'picture' )
-    picture_parent.replaceWith( new_picture_entity_parent )
-    new_picture_src = soup.new_tag( 'img' )
-    new_picture_src[ 'src' ] = picture_src
-    new_picture_src[ 'alt' ] = picture_alt
-    new_picture_entity_parent.insert( 1, new_picture_src )
-    i = 0
-    while i < 2:
-        if i == 1:
-            new_picture_src1 = soup.new_tag( 'source' )
-            new_picture_src1[ 'media' ] = "( min-width: " + config[ "break_mid" ] + "px )"
-            new_picture_src1[ 'srcset' ] = picture_src
-            new_picture_entity_parent.insert( i, new_picture_src1 )
-        else:
-            new_picture_src2 = soup.new_tag( 'source' )
-            new_picture_src2[ 'media' ] = "( min-width: " + config[ "break_min" ] + "px )"
-            new_picture_src2[ 'srcset' ] = picture_src
-            new_picture_entity_parent.insert( i, new_picture_src2 )
-        i = i + 1
-    soup = str( soup ).replace( "</source>", "" ) # it's dirty but we've already performed our transformations
+for gallery in soup.find_all( 'h3' ):
+    if ( gallery.text.lower() == "gallery" ):
+        gallery_header = gallery
+        gallery_header_next_sibling = gallery_header.next_sibling
+        if ( gallery_header.next_sibling.name == "p" ):
+            if not ( gallery_header.next_sibling.text == "" ):
+                new_gallery_header = soup.new_tag( 'h3' )
+                new_gallery_header.string = gallery_header.next_sibling.text
+                gallery_header.next_sibling.decompose()
+                gallery_header.replaceWith( new_gallery_header )
+                gallery_header_next_sibling = new_gallery_header.next_sibling
+        i = 0
+        for gallery_elem in gallery_header_next_sibling:
+            if ( gallery_elem.name.lower() == 'img' ):
+                if ( i == 0 ):
+                    new_gallery = soup.new_tag( "div" )
+                    new_gallery[ "class" ] = "gallery"
+                gallery_elem.extract()
+                new_gallery.insert( 1, gallery_elem )
+                i = i + 1
+        gallery_header_next_sibling.replaceWith( new_gallery )
+        gallery_header_next_sibling.decompose()
 
-body = soup + '\n' # I like to have a new line at the end of all my html documents
+body = str( soup ) + '\n' # I like to have a new line at the end of all my html documents
+# since we have changed to the html5lib it 'helpfully' adds the the html and head elements to the soup which we can get rid of with a string replace
+body = body.replace( "<html><head></head><body>", "" )
+body = body.replace( "</body></html>", "" )
+# end of string manipulations
 head = open( config[ "tpl_head" ], 'r' ).read()
 head = head.replace( "$title", title_entity )
 head = head.replace( "$css", config[ "css_folder" ] + config[ "css_file" ] )
@@ -62,7 +64,7 @@ head = head.replace( "$js", config[ "js_file" ] )
 
 aside = open( config[ "tpl_aside" ], 'r' ).read()
 
-soup = BeautifulSoup( aside, 'html.parser' )
+soup = BeautifulSoup( aside, 'html5lib' )
 
 # git functions lists and variables
 history = githistory( loc_input_md )
@@ -80,10 +82,7 @@ if "@" in origin_location:
     origin_user = origin_user[ 0 ]
     git_url = "https://" + origin_location[ 0 ] + "/" + origin_user + "/" + origin_project
 else:
-    origin_location = None
-# print( origin_name )
-# print( origin_location )
-
+    git_url = origin_location.replace( ".git", "" ).replace( "(fetch)", "" ).rstrip()
 
 for html_elem in soup.find_all( 'ol' ):
     revision_list = html_elem
@@ -112,11 +111,15 @@ for revision in history:
             data_elem = soup.new_tag( 'div' )
             data_elem.string = data
         list_item.insert( 1, data_elem )
-    revision_list.insert( i, list_item )
+    revision_list.insert( 1, list_item )
 
 # print( soup )
 
 aside = str( soup )
+# string manipulations
+aside = aside.replace( "<html><head></head><body>", "" )
+aside = aside.replace( "</body></html>", "" )
+# end of string manipulations
 
 foot = open( config[ "tpl_footer" ], 'r' ).read()
 
