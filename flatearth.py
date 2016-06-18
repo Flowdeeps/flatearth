@@ -43,11 +43,11 @@ for gallery in soup.find_all( 'h3' ):
         i = 0
         for gallery_elem in gallery_header_next_sibling:
             if ( gallery_elem.name.lower() == 'img' ):
-
                 if ( i == 0 ):
+                    gallery_elems = {}
                     new_gallery = soup.new_tag( "div" )
                     new_gallery[ "class" ] = "gallery"
-
+                gallery_elems[ i ] = gallery_elem
                 new_gallery_elem = soup.new_tag( "figure" )
 
                 if ( gallery_elem.has_attr( "alt" ) ):
@@ -64,10 +64,11 @@ for gallery in soup.find_all( 'h3' ):
                     new_gallery_attribution.insert( 0, new_gallery_attribution_dt )
                     new_gallery_attribution.insert( 1, new_gallery_attribution_dd )
                     new_gallery_elem.insert( 1, new_gallery_attribution )
-
-                new_gallery_elem.insert( 0, gallery_elem )
-                new_gallery.insert( 1, new_gallery_elem )
                 i = i + 1
+                new_gallery_elem.insert( 1, gallery_elem )
+                # new_gallery.insert( 1, new_gallery_elem )
+        gallery_elem.decompose()
+        print( gallery_elems )
         try:
             new_gallery_header.insert_after( new_gallery )
         except:
