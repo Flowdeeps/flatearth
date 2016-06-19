@@ -42,41 +42,48 @@ for gallery in soup.find_all( 'h3' ):
                 gallery_header_next_sibling = new_gallery_header.next_sibling
         i = 0
         for gallery_elem in gallery_header_next_sibling:
-            if ( gallery_elem.name.lower() == 'img' ):
-                if ( i == 0 ):
-                    gallery_elems = []
-                    new_gallery = soup.new_tag( "div" )
-                    new_gallery[ "class" ] = "gallery"
-                tmp_elem = []
-                del tmp_elem[:]
-                tmp_elem.append( gallery_elem )
-                gallery_elems.append( tmp_elem )
-            i = i + 1
-
+            try:
+                if ( gallery_elem.name.lower() == 'img' ):
+                    if ( i == 0 ):
+                        gallery_elems = []
+                        new_gallery = soup.new_tag( "div" )
+                        new_gallery[ "class" ] = "gallery"
+                    tmp_elem = []
+                    del tmp_elem[:]
+                    tmp_elem.append( gallery_elem )
+                    gallery_elems.append( tmp_elem )
+                i = i + 1
+            except:
+                None
         i = 0
-        for new_elem in gallery_elems:
-            figure = soup.new_tag( "figure" )
-            figure.insert( 0, new_elem[ 0 ] )
-            figcap = soup.new_tag( "figcaption" )
-            figcap.string = new_elem[ 0 ][ "alt" ]
-            figure.insert( 1, figcap )
-            attribute_dl = soup.new_tag( "dl" )
-            attribute_dt = soup.new_tag( "dt" )
-            attribute_dt.string = "Image owner:"
-            attribute_dd = soup.new_tag( "dt" )
-            attribute_dd.string = new_elem[ 0 ][ "title" ]
-            attribute_dl.insert( 1, attribute_dt )
-            attribute_dl.insert( 1, attribute_dd )
-            figure.insert( 2, attribute_dl )
-            new_gallery.insert( i, figure )
-            i = i + 1
-
         try:
-            new_gallery_header.insert_after( new_gallery )
-        except:
-            gallery_header.insert_after( new_gallery )
+            for new_elem in gallery_elems:
+                figure = soup.new_tag( "figure" )
+                figure.insert( 0, new_elem[ 0 ] )
+                figcap = soup.new_tag( "figcaption" )
+                figcap.string = new_elem[ 0 ][ "alt" ]
+                figure.insert( 1, figcap )
+                attribute_dl = soup.new_tag( "dl" )
+                attribute_dt = soup.new_tag( "dt" )
+                attribute_dt.string = "Image owner:"
+                attribute_dd = soup.new_tag( "dt" )
+                attribute_dd.string = new_elem[ 0 ][ "title" ]
+                attribute_dl.insert( 1, attribute_dt )
+                attribute_dl.insert( 1, attribute_dd )
+                figure.insert( 2, attribute_dl )
+                new_gallery.insert( i, figure )
+                i = i + 1
 
-        gallery_header_next_sibling.decompose()
+            try:
+                new_gallery_header.insert_after( new_gallery )
+            except:
+                gallery_header.insert_after( new_gallery )
+
+            gallery_header_next_sibling.decompose()
+
+        except:
+            None
+
 
 body = str( soup ) + '\n' # I like to have a new line at the end of all my html documents
 # since we have changed to the html5lib it 'helpfully' adds the the html and head elements to the soup which we can get rid of with a string replace
