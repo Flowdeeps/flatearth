@@ -44,35 +44,38 @@ for gallery in soup.find_all( 'h3' ):
         for gallery_elem in gallery_header_next_sibling:
             if ( gallery_elem.name.lower() == 'img' ):
                 if ( i == 0 ):
-                    gallery_elems = {}
+                    gallery_elems = []
                     new_gallery = soup.new_tag( "div" )
                     new_gallery[ "class" ] = "gallery"
-                gallery_elems[ i ] = gallery_elem
-                new_gallery_elem = soup.new_tag( "figure" )
+                tmp_elem = []
+                del tmp_elem[:]
+                tmp_elem.append( gallery_elem )
+                gallery_elems.append( tmp_elem )
+            i = i + 1
 
-                if ( gallery_elem.has_attr( "alt" ) ):
-                    new_gallery_cap = soup.new_tag( "figcaption" )
-                    new_gallery_cap.string = gallery_elem[ "alt" ] # becaue the alt tag should be descriptive of the image we're going to use it as the tag
-                    new_gallery_elem.insert( 2, new_gallery_cap )
+        i = 0
+        for new_elem in gallery_elems:
+            figure = soup.new_tag( "figure" )
+            figure.insert( 0, new_elem[ 0 ] )
+            figcap = soup.new_tag( "figcaption" )
+            figcap.string = new_elem[ 0 ][ "alt" ]
+            figure.insert( 1, figcap )
+            attribute_dl = soup.new_tag( "dl" )
+            attribute_dt = soup.new_tag( "dt" )
+            attribute_dt.string = "Image owner:"
+            attribute_dd = soup.new_tag( "dt" )
+            attribute_dd.string = new_elem[ 0 ][ "title" ]
+            attribute_dl.insert( 1, attribute_dt )
+            attribute_dl.insert( 1, attribute_dd )
+            figure.insert( 2, attribute_dl )
+            new_gallery.insert( i, figure )
+            i = i + 1
 
-                if ( gallery_elem.has_attr( "title" ) ):
-                    new_gallery_attribution = soup.new_tag( "dl" )
-                    new_gallery_attribution_dt = soup.new_tag( "dt" )
-                    new_gallery_attribution_dt.string = "Image owner:"
-                    new_gallery_attribution_dd = soup.new_tag( "dd" )
-                    new_gallery_attribution_dd.string = gallery_elem[ "title" ]
-                    new_gallery_attribution.insert( 0, new_gallery_attribution_dt )
-                    new_gallery_attribution.insert( 1, new_gallery_attribution_dd )
-                    new_gallery_elem.insert( 1, new_gallery_attribution )
-                i = i + 1
-                new_gallery_elem.insert( 1, gallery_elem )
-                # new_gallery.insert( 1, new_gallery_elem )
-        gallery_elem.decompose()
-        print( gallery_elems )
         try:
             new_gallery_header.insert_after( new_gallery )
         except:
             gallery_header.insert_after( new_gallery )
+
         gallery_header_next_sibling.decompose()
 
 body = str( soup ) + '\n' # I like to have a new line at the end of all my html documents
